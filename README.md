@@ -7,3 +7,4 @@ Pycoingecko is a wrapper used to simplify the intergration of Coingecko API to p
 
 Up Prices   : Close > Open -> Stock prices fell
 Down Prices : Open > Close -> Stock prices rose
+![alt text](https://github.com/AravindR97/Bitcoin-repo/blob/main/newplot.png)
