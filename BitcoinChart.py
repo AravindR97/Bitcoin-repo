@@ -1,40 +1,34 @@
-""" Program to plot the fluctuations in the price of bitcoin"""
+"""Candlestick chart - Bitcoin price data"""
 
 from pycoingecko import CoinGeckoAPI
-    #Imported CoinGeckoAPI class from pycoingecko library
 import pandas as pd
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+from datetime import datetime as dt
 
+def unix_to_date(x):
+    """Converts Unix Time to string of format dd-mm-yyyy hh:mm:ss"""
+    return dt.fromtimestamp(x/1000).strftime("%d-%m-%Y %H:%M:%S")
 
 cg = CoinGeckoAPI()
-    #Created a CoinGeckoAPI object
+        #Created a CoinGeckoAPI client object
+ohlcList = cg.get_coin_ohlc_by_id(id='bitcoin', vs_currency='usd', days= 7)
+        #ohlc list of bitcoin for the last 7 days
+ohlcDF = pd.DataFrame(ohlcList, columns= ["Date", "Open", "High", "Low", "Close"])
+        #Casting into a dataframe
+ohlcDF.Date = list(map( unix_to_date, ohlcDF.Date))
+ohlcDF.set_index('Date', inplace= True)
+#print(ohlcDF)
 
-#use a method in this class to get info about bitcoin for the last 30 days:
-bit_info = cg.get_coin_market_chart_by_id(id='bitcoin', vs_currency='usd', days=30)
-#'bit_info' is a dictionary of lists
-print(bit_info.keys())
+fig = go.Figure(data= [go.Candlestick(x= ohlcDF.index, open= ohlcDF.Open,
+                                      high= ohlcDF.High, low= ohlcDF.Low,
+                                    close= ohlcDF.Close)])
+        #Created candlestick chart using plotly
+#fig.write_html("C:/Users/Aravind R/Desktop/Bitcoin.html")
 
+with open('C:/Users/Aravind R/Desktop/Bitcoin2.html', 'w') as f:
+    """Saving the candlestick chart as a small size html file"""
+    f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+f.close()
 
-#Get the values at 'prices' key:
-bit_prices = bit_info['prices']
-print(type(bit_prices))
-
-#Convert the list into a dataframe:
-bit_df = pd.DataFrame(bit_prices, columns= ['Timestamp', 'Price'])
-print(bit_df)
-#(instead of casting the entire dictionary, just the list at one of its keys is cast into a DF)
-
-plt.plot(bit_df.Timestamp[0:100], bit_df.Price[0:100])
-plt.show()
-
-
-'''
-#Get the list of all coins in CoinGeckoAPI:
-L = cg.get_coins_list()
-print(L) #it is a list of dictionaries
-
-
-#convert the list into a DataFrame for convenience:
-df = pd.DataFrame(L)
-print(df)
-'''
+#fig.show()
