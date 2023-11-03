@@ -1,7 +1,7 @@
-# Candlestick Chart of Bitcoin Prices
+# Stock Price Analysis of Cryptocurrencies
 
-With the help of Coingecko API, Bitcoin stock price data is collected and is used to create a candlestick chart for analysis.
-Pycoingecko is a wrapper used to simplify the intergration of Coingecko API to python program.
+With the help of Coingecko API, ohlc data of various crypto currencies over a period of 7 days is collected and is used to create a candlestick chart for analysis.
+Pycoingecko is a wrapper used to simplify the intergration of Coingecko API to python program. An interactive candlestick chart is created using Plotly.
 
 ## Sample:
 
